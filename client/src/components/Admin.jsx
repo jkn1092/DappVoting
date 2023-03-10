@@ -1,22 +1,36 @@
 import useEth from "../contexts/EthContext/useEth";
 import {useEffect, useState} from "react";
+import ListVoted from "./ListVoted";
 
 function Admin() {
     const { state } = useEth();
-    const [notification, setNotification] = useState("");
     const [newVoter, setNewVoter] = useState("");
     const [votersEvents, setVotersEvents] = useState();
+    const [workflowStatusEvents, setWorkflowStatusEvents] = useState();
+
+    const workflowStatusArray = [
+        'Registering Voters',
+        'Proposals Registration Started',
+        'Proposals Registration Ended',
+        'Voting Session Started',
+        'Voting Session Ended',
+        'Votes Tallied'
+    ]
 
     const AddVoterUI = () => {
 
         const addVoter = async () => {
+            if (!state.web3.utils.isAddress(newVoter)) {
+                alert("Invalid address")
+                return;
+            }
             try {
                 await state.contract.methods.addVoter(newVoter).send({from: state.accounts[0]});
 
-                setNotification("Voter ajouté");
                 setNewVoter("");
+                alert("Voter added");
             } catch (err) {
-                setNotification("Non valide");
+                alert("Invalid address");
             }
         }
 
@@ -39,11 +53,19 @@ function Admin() {
     }
 
     const ListVoters = () => {
-        if( votersEvents != null )
+        return votersEvents.map( item => {
+            return(
+                <li key={item}>{item}</li>
+            )
+        })
+    }
+
+    const ListWorkflowStatusChange = () => {
+        if( workflowStatusEvents != null )
         {
-            return votersEvents.map( item => {
+            return workflowStatusEvents.map( item => {
                 return(
-                    <li key={item}>{item}</li>
+                    <p key={item.previousStatus}>Updated from <i>'{workflowStatusArray[item.previousStatus]}'</i> to <i>'{workflowStatusArray[item.newStatus]}'</i></p>
                 )
             })
         }
@@ -56,41 +78,41 @@ function Admin() {
             case '0' :
                 try{
                     await contract.methods.startProposalsRegistering().send({from: accounts[0]});
-                    setNotification("Started Proposal Registration");
+                    alert("Started Proposal Registration");
                 } catch (err) {
-                    setNotification("Error when moving to next step");
+                    alert("Error when moving to next step");
                 }
                 break;
             case '1' :
                 try{
                     await contract.methods.endProposalsRegistering().send({from: accounts[0]});
-                    setNotification("Ended Proposal Registration");
+                    alert("Ended Proposal Registration");
                 } catch (err) {
-                    setNotification("Error when moving to next step");
+                    alert("Error when moving to next step");
                 }
                 break;
             case '2' :
                 try{
                     await contract.methods.startVotingSession().send({from: accounts[0]});
-                    setNotification("Started Voting Session");
+                    alert("Started Voting Session");
                 } catch (err) {
-                    setNotification("Error when moving to next step");
+                    alert("Error when moving to next step");
                 }
                 break;
             case '3' :
                 try{
                     await contract.methods.endVotingSession().send({from: accounts[0]});
-                    setNotification("Ended Voting Session");
+                    alert("Ended Voting Session");
                 } catch (err) {
-                    setNotification("Error when moving to next step");
+                    alert("Error when moving to next step");
                 }
                 break;
             case '4' :
                 try{
                     await contract.methods.tallyVotes().send({from: accounts[0]});
-                    setNotification("Tallied Votes");
+                    alert("Tallied Votes");
                 } catch (err) {
-                    setNotification("Error when moving to next step");
+                    alert("Error when moving to next step");
                 }
                 break;
             default:
@@ -104,34 +126,57 @@ function Admin() {
                 fromBlock: 0,
                 toBlock: 'latest'
             });
-
             let voters=[];
             oldVoters.forEach(event => {
                 voters.push(event.returnValues.voterAddress);
             });
             setVotersEvents(voters)
+
+            let oldWorkflowStatusChange = await state.contract.getPastEvents('WorkflowStatusChange', {
+                fromBlock: 0,
+                toBlock: 'latest'
+            });
+            let workflowStatusChange=[];
+            oldWorkflowStatusChange.forEach(event => {
+                workflowStatusChange.push(event.returnValues);
+            });
+            setWorkflowStatusEvents(workflowStatusChange)
+
         })();
     }, [state.contract])
 
     return (
         <div>
-            <h2>Admin</h2>
+            <h4>Admin: {state.accounts[0]} </h4>
+            <br/>
             <div>
-                <p>{notification}</p>
-            </div>
-            <div>
-                <h4>Workflow Status {state.workFlowStatus}</h4>
+                <h4>Current workflow status : {workflowStatusArray[state.workFlowStatus]}</h4>
                 <button onClick={ () => nextWorkflowStatus() }>Next Step</button>
             </div>
             <br/>
             <AddVoterUI />
-            <br/>
+
+            {votersEvents?.length > 0 ?
+                <div>
+                    <h4>List voters:</h4>
+                    <ul>
+                        <ListVoters/>
+                    </ul>
+                </div>
+                :
+                <></>
+            }
+
+            {workflowStatusEvents?.length > 0 ?
             <div>
-                <h4>List voters:</h4>
-                <ul>
-                    <ListVoters/>
-                </ul>
+                <h4>Workflow status change history</h4>
+                <ListWorkflowStatusChange/>
             </div>
+                :
+                <></>
+            }
+
+            <ListVoted/>
         </div>
     );
 }
