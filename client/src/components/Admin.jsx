@@ -1,21 +1,20 @@
 import useEth from "../contexts/EthContext/useEth";
 import {useEffect, useState} from "react";
 import ListVoted from "./ListVoted";
+import {Box, Button, Divider, Grid, List, ListItem, ListItemText, TextField, Typography} from "@mui/material";
+import {workflowStatusArray} from "./Utils";
+
+const style = {
+    width: '100%',
+    maxWidth: 360,
+    bgcolor: 'background.paper',
+};
 
 function Admin() {
     const { state } = useEth();
     const [newVoter, setNewVoter] = useState("");
     const [votersEvents, setVotersEvents] = useState();
     const [workflowStatusEvents, setWorkflowStatusEvents] = useState();
-
-    const workflowStatusArray = [
-        'Registering Voters',
-        'Proposals Registration Started',
-        'Proposals Registration Ended',
-        'Voting Session Started',
-        'Voting Session Ended',
-        'Votes Tallied'
-    ]
 
     const AddVoterUI = () => {
 
@@ -37,17 +36,25 @@ function Admin() {
         if( state.workFlowStatus === '0' )
         {
             return(
-                <div>
-                    <h4>New voter</h4>
-                    <input type="text"
-                           value={newVoter}
-                           onChange={(e) => setNewVoter(e.target.value)}
-                           autoFocus
-                    />
-                    <button onClick= { () => addVoter() }>
-                        Add voter
-                    </button>
-                </div>
+                <Box>
+                    <Grid container spacing={2}>
+                        <Grid item xs={4}>
+                        <TextField
+                            label="Address of new voter"
+                            helperText="0x41..."
+                            value={newVoter}
+                            onChange={(e) => setNewVoter(e.target.value)}
+                            fullWidth
+                            autoFocus
+                        />
+                        </Grid>
+                        <Grid item xs={8}>
+                        <Button onClick= { () => addVoter() }>
+                            Add voter
+                        </Button>
+                        </Grid>
+                    </Grid>
+                </Box>
             );
         }
     }
@@ -55,7 +62,10 @@ function Admin() {
     const ListVoters = () => {
         return votersEvents.map( item => {
             return(
-                <li key={item}>{item}</li>
+                <ListItem key={item}>
+                    <ListItemText primary={item} />
+                    <Divider/>
+                </ListItem>
             )
         })
     }
@@ -65,7 +75,10 @@ function Admin() {
         {
             return workflowStatusEvents.map( item => {
                 return(
-                    <p key={item.previousStatus}>Updated from <i>'{workflowStatusArray[item.previousStatus]}'</i> to <i>'{workflowStatusArray[item.newStatus]}'</i></p>
+                    <ListItem key={item.previousStatus}>
+                        <ListItemText key={item.previousStatus}>Updated from <i>'{workflowStatusArray[item.previousStatus]}'</i> to <i>'{workflowStatusArray[item.newStatus]}'</i></ListItemText>
+                        <Divider/>
+                    </ListItem>
                 )
             })
         }
@@ -147,36 +160,39 @@ function Admin() {
 
     return (
         <div>
-            <h4>Admin: {state.accounts[0]} </h4>
-            <br/>
-            <div>
-                <h4>Current workflow status : {workflowStatusArray[state.workFlowStatus]}</h4>
-                <button onClick={ () => nextWorkflowStatus() }>Next Step</button>
-            </div>
-            <br/>
-            <AddVoterUI />
-
-            {votersEvents?.length > 0 ?
-                <div>
-                    <h4>List voters:</h4>
-                    <ul>
-                        <ListVoters/>
-                    </ul>
-                </div>
-                :
-                <></>
-            }
-
-            {workflowStatusEvents?.length > 0 ?
-            <div>
-                <h4>Workflow status change history</h4>
-                <ListWorkflowStatusChange/>
-            </div>
-                :
-                <></>
-            }
-
-            <ListVoted/>
+            <Grid container spacing={2}>
+                <Grid item xs={8}>
+                    {state.workFlowStatus < 5 ?
+                        <Button onClick={() => nextWorkflowStatus()}>Next Step</Button>
+                        :
+                        <></>
+                    }
+                    <AddVoterUI />
+                    {votersEvents?.length > 0 ?
+                        <div>
+                            <h4>List voters:</h4>
+                            <List sx={style} component="nav" aria-label="mailbox folders">
+                                <ListVoters/>
+                            </List>
+                        </div>
+                        :
+                        <></>
+                    }
+                </Grid>
+                <Grid item xs={4}>
+                    {workflowStatusEvents?.length > 0 ?
+                    <div>
+                        <h4>Workflow status change history</h4>
+                        <List sx={style} component="nav" aria-label="mailbox folders">
+                            <ListWorkflowStatusChange/>
+                        </List>
+                    </div>
+                        :
+                        <></>
+                    }
+                    <ListVoted/>
+                </Grid>
+            </Grid>
         </div>
     );
 }

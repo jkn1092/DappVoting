@@ -3,6 +3,8 @@ import useEth from "./contexts/EthContext/useEth";
 import Admin from "./components/Admin"
 import Footer from "./components/Footer";
 import Voter from "./components/Voter";
+import NavBar from "./components/NavBar";
+import {Box, Container, Divider} from "@mui/material";
 
 function App() {
   const VoteUI = () => {
@@ -10,17 +12,13 @@ function App() {
     if (state.web3) {
         if( state.owner === state.accounts[0] ){
             return (
-                <>
-                    <Admin/>
-                </>
+                <Admin/>
             )
         }
         else
         {
             return (
-                <>
-                    <Voter/>
-                </>
+                <Voter/>
             )
         }
     }
@@ -34,13 +32,18 @@ function App() {
 
   return (
     <EthProvider>
-      <div id="App">
-        <div className="container">
-          <VoteUI />
-          <hr />
-          <Footer />
-        </div>
-      </div>
+      <Box>
+        <NavBar/>
+        <main>
+            <Container paddingy={4}>
+                <VoteUI />
+            </Container>
+            <Divider />
+            <Container paddingy={4}>
+                <Footer />
+            </Container>
+        </main>
+      </Box>
     </EthProvider>
   );
 }

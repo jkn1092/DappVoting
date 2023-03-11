@@ -1,16 +1,27 @@
-function Link({ uri, text }) {
-  return <a href={uri} target="_blank" rel="noreferrer">{text}</a>;
-}
+import {Box, Grid, Link, Typography} from "@mui/material";
 
 function Footer() {
   return (
-    <footer>
-      <h2>More resources</h2>
-      <Link uri={"https://trufflesuite.com"} text={"Truffle"} />
-      <Link uri={"https://reactjs.org"} text={"React"} />
-      <Link uri={"https://soliditylang.org"} text={"Solidity"} />
-      <Link uri={"https://ethereum.org"} text={"Ethereum"} />
-    </footer >
+      <Grid container spacing={1}>
+          <Grid item xs={12}>
+              <Box
+                  display={'flex'}
+                  justifyContent={'space-between'}
+                  alignItems={'center'}
+                  width={1}
+                  flexDirection={{ xs: 'column', sm: 'row' }}
+              >
+                  <Typography fontWeight={700} >Team Hela/Jeremy</Typography>
+                  <Box display={'flex'} alignItems={'center'}>
+                      <Typography fontWeight={700} >More resources : </Typography>
+                      <Box><Link href={"https://trufflesuite.com"}> Truffle </Link></Box>
+                      <Box><Link href={"https://reactjs.org"}> React </Link></Box>
+                      <Box><Link href={"https://soliditylang.org"}> Solidity </Link></Box>
+                      <Box><Link href={"https://ethereum.org"}> Ethereum </Link></Box>
+                  </Box>
+              </Box>
+          </Grid>
+    </Grid>
   );
 }
 
