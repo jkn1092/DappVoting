@@ -1,5 +1,6 @@
 import useEth from "../contexts/EthContext/useEth";
 import {useEffect, useState} from "react";
+import {Divider, List, ListItem, ListItemText} from "@mui/material";
 
 function ListVoted() {
     const { state } = useEth();
@@ -7,8 +8,12 @@ function ListVoted() {
 
     const ListVoted = () => {
         return voted.map( item => {
+            let itemText = `${item.voter} voted for Proposal ${item.proposalId}`
             return(
-                <p key={item.voter}>{item.voter} voted for Proposal {item.proposalId}</p>
+                <ListItem key={item.voter}>
+                    <ListItemText primary={itemText} />
+                    <Divider/>
+                </ListItem>
             )
         })
     }
@@ -34,7 +39,9 @@ function ListVoted() {
             {voted?.length > 0 ?
                 <div>
                     <h4>List voted:</h4>
-                    <ListVoted/>
+                    <List component="nav">
+                        <ListVoted/>
+                    </List>
                 </div>
                 :
                 <></>
