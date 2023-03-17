@@ -73,7 +73,7 @@ export default function Home() {
                     :
                         <></>
                 }
-                <Tabs>
+                <Tabs defaultIndex={1}>
                     <TabList>
                         { isVoter ? (<Tab>Voter</Tab>) : <></> }
                         { state.owner === state.accounts[0] ? (<Tab> Admin </Tab>) : <></> }
