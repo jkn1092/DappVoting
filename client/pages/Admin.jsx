@@ -1,6 +1,6 @@
 import useEth from "../contexts/EthContext/useEth";
 import {useEffect, useState} from "react";
-import {Divider, Text} from '@chakra-ui/react'
+import {Divider, Grid, GridItem, Text} from '@chakra-ui/react'
 import {
     Button,
     Card,
@@ -51,7 +51,7 @@ function Admin() {
 
         if (state.workFlowStatus === '0') {
             return (
-                <Card>
+                <Card w={300}>
                     <CardHeader>
                         <Heading>Registration</Heading>
                     </CardHeader>
@@ -64,14 +64,14 @@ function Admin() {
                             autoFocus
                         />
                     </CardBody>
-                    <CardFooter><Button size='lg' onClick={() => addVoter()}>
-                        Add voter
-                    </Button></CardFooter>
+                    <CardFooter>
+                        <Button size='lg' onClick={() => addVoter()}>Add voter</Button>
+                    </CardFooter>
                 </Card>
             );
         } else {
             return (
-                <Card w={248}>
+                <Card w={300}>
                     <CardHeader>
                         <Heading>Registration</Heading>
                     </CardHeader>
@@ -86,7 +86,7 @@ function Admin() {
 
     const ListVoters = () => {
         return (
-            <Card w={248}>
+            <Card w={450}>
                 <CardHeader>
                     <Heading>Voter list</Heading>
                 </CardHeader>
@@ -110,14 +110,24 @@ function Admin() {
                         </CardHeader>
                         <Divider/>
                         <CardBody>
-                            <ul>{workflowStatusEvents.map(item => {
-                                return (
-                                    <li key={item.previousStatus}>Updated
-                                        from <i>{workflowStatusArray[item.previousStatus]}</i> to <i> {workflowStatusArray[item.newStatus]}</i>
-                                    </li>
+                            { workflowStatusEvents.lenght > 0 ?
+                                (
+                                    <ul>{workflowStatusEvents.map(item => {
+                                        return (
+                                            <li key={item.previousStatus}>Updated
+                                                from <i>{workflowStatusArray[item.previousStatus]}</i> to <i> {workflowStatusArray[item.newStatus]}</i>
+                                            </li>
+                                        )
+                                    })},
+                                    </ul>
                                 )
-                            })},
-                            </ul>
+                                :
+                                <>
+                                    No Status Update
+                                </>
+
+                            }
+
                         </CardBody>
                     </Card>
                 )
@@ -263,27 +273,35 @@ function Admin() {
         return
     } else {
         return (
-            <div>
-                <Heading>Admin : {state.accounts[0]} </Heading>
+            <div align={'center'}>
+                <Heading>Admin dashboard</Heading>
                 <br/><br/>
-                <SimpleGrid spacing={5} templateColumns='repeat(auto-fill, minmax(210px, 1fr))'>
-                    <AddVoterUI/>
-                    <Card w={248}>
-                        <CardHeader>
-                            <Heading>Status</Heading>
-                        </CardHeader>
-                        <Divider/>
-                        <CardBody>
-                            <Text>The current workflow status is : </Text>
-                            <Text as='u'>{workflowStatusArray[state.workFlowStatus]}</Text>
-                        </CardBody>
-                        <CardFooter>
-                            <Button onClick={() => nextWorkflowStatus()}>Next status</Button>
-                        </CardFooter>
-                    </Card>
-                    <ListVoters/>
-                    {workflowStatusEvents?.length > 0 ? <ListWorkflowStatusChange/> : <div/>}
-                </SimpleGrid>
+                <Grid templateColumns='repeat(4, 1fr)' gap={2}>
+                    <GridItem w='100%' h='10'>
+                        <ListVoters/>
+                    </GridItem>
+                    <GridItem w='100%' h='10'>
+                        <AddVoterUI/>
+                    </GridItem>
+                    <GridItem w='100%' h='10'>
+                        <Card w={300}>
+                            <CardHeader>
+                                <Heading>Status</Heading>
+                            </CardHeader>
+                            <Divider/>
+                            <CardBody>
+                                <Text>The current workflow status is : </Text>
+                                <Text as='u'>{workflowStatusArray[state.workFlowStatus]}</Text>
+                            </CardBody>
+                            <CardFooter>
+                                <Button onClick={() => nextWorkflowStatus()}>Next status</Button>
+                            </CardFooter>
+                        </Card>
+                    </GridItem>
+                    <GridItem w='100%' h='10'>
+                        <ListWorkflowStatusChange/>
+                    </GridItem>
+                </Grid>
             </div>
         );
     }
