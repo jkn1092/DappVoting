@@ -13,6 +13,7 @@ import {
     Stack,
     useToast
 } from "@chakra-ui/react";
+import {workflowStatusArray} from "../components/Utils";
 
 
 function Admin() {
@@ -20,15 +21,6 @@ function Admin() {
     const [newVoter, setNewVoter] = useState("");
     const [votersEvents, setVotersEvents] = useState();
     const [workflowStatusEvents, setWorkflowStatusEvents] = useState();
-
-    const workflowStatusArray = [
-        'Registering Voters',
-        'Proposals Registration Started',
-        'Proposals Registration Ended',
-        'Voting Session Started',
-        'Voting Session Ended',
-        'Votes Tallied'
-    ]
 
     const {state} = useEth();
 
@@ -110,7 +102,7 @@ function Admin() {
                         </CardHeader>
                         <Divider/>
                         <CardBody>
-                            { workflowStatusEvents.lenght > 0 ?
+                            { workflowStatusEvents.length > 0 ?
                                 (
                                     <ul>{workflowStatusEvents.map(item => {
                                         return (
@@ -125,7 +117,6 @@ function Admin() {
                                 <>
                                     No Status Update
                                 </>
-
                             }
 
                         </CardBody>
@@ -274,7 +265,7 @@ function Admin() {
     } else {
         return (
             <div align={'center'}>
-                <Heading>Admin dashboard</Heading>
+                <Button onClick={() => nextWorkflowStatus()}>Next status</Button>
                 <br/><br/>
                 <Grid templateColumns='repeat(4, 1fr)' gap={2}>
                     <GridItem w='100%' h='10'>
@@ -282,21 +273,6 @@ function Admin() {
                     </GridItem>
                     <GridItem w='100%' h='10'>
                         <AddVoterUI/>
-                    </GridItem>
-                    <GridItem w='100%' h='10'>
-                        <Card w={300}>
-                            <CardHeader>
-                                <Heading>Status</Heading>
-                            </CardHeader>
-                            <Divider/>
-                            <CardBody>
-                                <Text>The current workflow status is : </Text>
-                                <Text as='u'>{workflowStatusArray[state.workFlowStatus]}</Text>
-                            </CardBody>
-                            <CardFooter>
-                                <Button onClick={() => nextWorkflowStatus()}>Next status</Button>
-                            </CardFooter>
-                        </Card>
                     </GridItem>
                     <GridItem w='100%' h='10'>
                         <ListWorkflowStatusChange/>
