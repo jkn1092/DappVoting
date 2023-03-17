@@ -1,21 +1,27 @@
 import useEth from "../contexts/EthContext/useEth";
 import {useEffect, useState} from "react";
-import {Divider, List, ListItem, ListItemText} from "@mui/material";
+import {Card, CardBody, CardHeader, Divider, Heading} from "@chakra-ui/react";
 
 function ListVoted() {
     const { state } = useEth();
     const [voted, setVoted] = useState();
 
     const ListVoted = () => {
-        return voted.map( item => {
-            let itemText = `${item.voter} voted for Proposal ${item.proposalId}`
-            return(
-                <ListItem key={item.voter}>
-                    <ListItemText primary={itemText} />
-                    <Divider/>
-                </ListItem>
+        if( voted?.length > 0 )
+        {
+            return voted.map( item => {
+                let itemText = `${item.voter} voted for Proposal ID '${item.proposalId}'`
+                return(
+                    <li key={item.voter}>{itemText}</li>
+                )
+            })
+        }
+        else
+        {
+            return (
+                <p>No vote yet</p>
             )
-        })
+        }
     }
 
     useEffect(() => {
@@ -35,18 +41,15 @@ function ListVoted() {
     }, [state.contract])
 
     return(
-        <>
-            {voted?.length > 0 ?
-                <div>
-                    <h4>List voted:</h4>
-                    <List component="nav">
-                        <ListVoted/>
-                    </List>
-                </div>
-                :
-                <></>
-            }
-        </>
+        <Card w={500}>
+            <CardHeader>
+                <Heading>List Voted</Heading>
+            </CardHeader>
+            <Divider/>
+            <CardBody>
+                <ListVoted/>
+            </CardBody>
+        </Card>
     )
 }
 

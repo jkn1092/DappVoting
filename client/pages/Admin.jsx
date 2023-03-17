@@ -14,6 +14,7 @@ import {
     useToast
 } from "@chakra-ui/react";
 import {workflowStatusArray} from "../components/Utils";
+import ListVoted from "../components/ListVoted";
 
 
 function Admin() {
@@ -41,39 +42,25 @@ function Admin() {
             }
         }
 
-        if (state.workFlowStatus === '0') {
-            return (
-                <Card w={300}>
-                    <CardHeader>
-                        <Heading>Registration</Heading>
-                    </CardHeader>
-                    <CardBody>
-                        <Input
-                            value={newVoter}
-                            focusBorderColor='pink.400'
-                            placeholder='please add voter name here..'
-                            onChange={(e) => setNewVoter(e.target.value)}
-                            autoFocus
-                        />
-                    </CardBody>
-                    <CardFooter>
-                        <Button size='lg' onClick={() => addVoter()}>Add voter</Button>
-                    </CardFooter>
-                </Card>
-            );
-        } else {
-            return (
-                <Card w={300}>
-                    <CardHeader>
-                        <Heading>Registration</Heading>
-                    </CardHeader>
-                    <Divider/>
-                    <CardBody>
-                        <Text>No voter can be registred after closing registration session</Text>
-                    </CardBody>
-                </Card>
-            );
-        }
+        return (
+            <Card w={300}>
+                <CardHeader>
+                    <Heading>Registration</Heading>
+                </CardHeader>
+                <CardBody>
+                    <Input
+                        value={newVoter}
+                        focusBorderColor='pink.400'
+                        placeholder='please add voter name here..'
+                        onChange={(e) => setNewVoter(e.target.value)}
+                        autoFocus
+                    />
+                </CardBody>
+                <CardFooter>
+                    <Button size='lg' onClick={() => addVoter()}>Add voter</Button>
+                </CardFooter>
+            </Card>
+        );
     }
 
     const ListVoters = () => {
@@ -98,7 +85,7 @@ function Admin() {
                 return (
                     <Card w={500}>
                         <CardHeader>
-                            <Heading>Update status history</Heading>
+                            <Heading>Workflow history</Heading>
                         </CardHeader>
                         <Divider/>
                         <CardBody>
@@ -110,7 +97,7 @@ function Admin() {
                                                 from <i>{workflowStatusArray[item.previousStatus]}</i> to <i> {workflowStatusArray[item.newStatus]}</i>
                                             </li>
                                         )
-                                    })},
+                                    })}
                                     </ul>
                                 )
                                 :
@@ -118,7 +105,6 @@ function Admin() {
                                     No Status Update
                                 </>
                             }
-
                         </CardBody>
                     </Card>
                 )
@@ -265,15 +251,34 @@ function Admin() {
     } else {
         return (
             <div align={'center'}>
-                <Button onClick={() => nextWorkflowStatus()}>Next status</Button>
+                { state.workFlowStatus != '5' ?
+                    <Button onClick={() => nextWorkflowStatus()}>Next status</Button>
+                    :
+                    <></>
+                }
                 <br/><br/>
                 <Grid templateColumns='repeat(4, 1fr)' gap={2}>
                     <GridItem w='100%' h='10'>
                         <ListVoters/>
                     </GridItem>
-                    <GridItem w='100%' h='10'>
-                        <AddVoterUI/>
-                    </GridItem>
+                    { state.workFlowStatus === '0' ?
+                        (
+                            <GridItem w='100%' h='10'>
+                                <AddVoterUI/>
+                            </GridItem>
+                        )
+                        :
+                        <></>
+                    }
+                    { state.workFlowStatus > '2' ?
+                        (
+                            <GridItem w='100%' h='10'>
+                                <ListVoted/>
+                            </GridItem>
+                        )
+                        :
+                        <></>
+                    }
                     <GridItem w='100%' h='10'>
                         <ListWorkflowStatusChange/>
                     </GridItem>

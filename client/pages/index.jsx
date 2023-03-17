@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import {
+    Box,
     Breadcrumb,
     BreadcrumbItem,
     BreadcrumbLink,
@@ -40,24 +41,22 @@ export default function Home() {
 
     const WorkflowStatusDisplay = () => {
         return(
-            <flex align={'center'}>
-                <Breadcrumb spacing='8px' separator={'>'}>
-                    {
-                        workflowStatusArray.map( item => {
-                            return(
-                                <BreadcrumbItem key={item}>
-                                    {
-                                        workflowStatusArray[state.workFlowStatus] === item ?
-                                            <BreadcrumbLink color={"blue.400"}>{item}</BreadcrumbLink>
-                                            :
-                                            <BreadcrumbLink>{item}</BreadcrumbLink>
-                                    }
-                                </BreadcrumbItem>
-                            );
-                        })
-                    }
-                </Breadcrumb>
-            </flex>
+            <Breadcrumb spacing='8px' separator={'>'}>
+                {
+                    workflowStatusArray.map( item => {
+                        return(
+                            <BreadcrumbItem key={item}>
+                                {
+                                    workflowStatusArray[state.workFlowStatus] === item ?
+                                        <BreadcrumbLink color={"blue.400"}>{item}</BreadcrumbLink>
+                                        :
+                                        <BreadcrumbLink>{item}</BreadcrumbLink>
+                                }
+                            </BreadcrumbItem>
+                        );
+                    })
+                }
+            </Breadcrumb>
         );
     }
 
@@ -66,6 +65,15 @@ export default function Home() {
         return (
             <>
                 <WorkflowStatusDisplay/>
+                { state.workFlowStatus === '5' ?
+                    (
+                        <Box bg='blue.400' w='100%' p={4} color='white'>
+                            Winning Proposal ID : { state.winningProposalId }
+                        </Box>
+                    )
+                    :
+                        <></>
+                }
                 <Tabs>
                     <TabList>
                         <Tab>Voter</Tab>
