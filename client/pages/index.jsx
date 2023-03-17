@@ -1,8 +1,7 @@
 import React from "react";
-import {ChakraProvider, extendTheme} from '@chakra-ui/react'
-import {EthProvider} from "../contexts/EthContext";
-import App from "./App";
-import Admin from "./Admin";
+import {Button, extendTheme, Stack} from '@chakra-ui/react'
+import Layout from '../components/Layout'
+import Link from "next/link";
 
 
 const theme = extendTheme({
@@ -15,12 +14,19 @@ const theme = extendTheme({
     }
 })
 
-export default function index() {
+export default function Home() {
     return (
-        <EthProvider>
-            <ChakraProvider theme={theme}>
-                <App/>
-            </ChakraProvider>
-        </EthProvider>
+        <div>
+            <Layout>
+                <Stack spacing='6' direction='row' align='center'>
+                    <Link href="/Admin">
+                        <Button colorScheme='blue' size='lg'>Admin </Button>
+                    </Link>
+                    <Link href="/Voter">
+                        <Button colorScheme='blue' size='lg'>Voter </Button>
+                    </Link>
+                </Stack>
+            </Layout>
+        </div>
     )
 }
