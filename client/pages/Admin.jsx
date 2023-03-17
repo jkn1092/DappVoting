@@ -1,6 +1,6 @@
 import useEth from "../contexts/EthContext/useEth";
 import {useEffect, useState} from "react";
-import {Divider, Grid, GridItem, Text} from '@chakra-ui/react'
+import {Box, Container, Divider, Flex, Grid, GridItem, Text, Wrap, WrapItem} from '@chakra-ui/react'
 import {
     Button,
     Card,
@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import {workflowStatusArray} from "../components/Utils";
 import ListVoted from "../components/ListVoted";
+import ListProposals from "../components/ListProposals";
 
 
 function Admin() {
@@ -26,9 +27,7 @@ function Admin() {
     const {state} = useEth();
 
     const AddVoterUI = () => {
-
         const addVoter = async () => {
-            console.log(newVoter);
             if (!state.web3.utils.isAddress(newVoter)) {
                 alert("Invalid address")
                 return;
@@ -250,40 +249,48 @@ function Admin() {
         return
     } else {
         return (
-            <div align={'center'}>
+            <Box>
                 { state.workFlowStatus != '5' ?
                     <Button onClick={() => nextWorkflowStatus()}>Next status</Button>
                     :
                     <></>
                 }
-                <br/><br/>
-                <Grid templateColumns='repeat(4, 1fr)' gap={2}>
-                    <GridItem w='100%' h='10'>
-                        <ListVoters/>
-                    </GridItem>
-                    { state.workFlowStatus === '0' ?
-                        (
-                            <GridItem w='100%' h='10'>
-                                <AddVoterUI/>
-                            </GridItem>
-                        )
-                        :
-                        <></>
-                    }
-                    { state.workFlowStatus > '2' ?
-                        (
-                            <GridItem w='100%' h='10'>
-                                <ListVoted/>
-                            </GridItem>
-                        )
-                        :
-                        <></>
-                    }
-                    <GridItem w='100%' h='10'>
-                        <ListWorkflowStatusChange/>
-                    </GridItem>
-                </Grid>
-            </div>
+                    <Wrap>
+                        <WrapItem>
+                            <ListVoters/>
+                        </WrapItem>
+                        { state.workFlowStatus === '0' ?
+                            (
+                                <WrapItem>
+                                    <AddVoterUI/>
+                                </WrapItem>
+                            )
+                            :
+                            <></>
+                        }
+                        { state.workFlowStatus > '0' ?
+                            (
+                                <WrapItem>
+                                    <ListProposals/>
+                                </WrapItem>
+                            )
+                            :
+                            <></>
+                        }
+                        { state.workFlowStatus > '2' ?
+                            (
+                                <WrapItem>
+                                    <ListVoted/>
+                                </WrapItem>
+                            )
+                            :
+                            <></>
+                        }
+                        <WrapItem>
+                            <ListWorkflowStatusChange/>
+                        </WrapItem>
+                    </Wrap>
+            </Box>
         );
     }
 }

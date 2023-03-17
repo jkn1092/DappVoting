@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Box,
     Breadcrumb,
@@ -17,7 +17,6 @@ import Admin from "./Admin";
 import Voter from "./Voter";
 import {workflowStatusArray} from "../components/Utils";
 
-
 const theme = extendTheme({
     styles: {
         global: (props) => ({
@@ -30,6 +29,7 @@ const theme = extendTheme({
 
 export default function Home() {
     const {state} = useEth();
+    const [isVoter, setIsVoter] = useState( false);
 
     const connectWallet = async () => {
         try {
@@ -61,7 +61,6 @@ export default function Home() {
     }
 
     const ConnectedUserUI = () => {
-
         return (
             <>
                 <WorkflowStatusDisplay/>
@@ -76,19 +75,33 @@ export default function Home() {
                 }
                 <Tabs>
                     <TabList>
-                        <Tab>Voter</Tab>
+                        { isVoter ? (<Tab>Voter</Tab>) : <></> }
                         { state.owner === state.accounts[0] ? (<Tab> Admin </Tab>) : <></> }
                     </TabList>
                     <TabPanels>
-                        <TabPanel>
-                            <Voter/>
-                        </TabPanel>
+                        { isVoter ? ( <TabPanel> <Voter/> </TabPanel> ) : <></> }
                         { state.owner === state.accounts[0] ? (<TabPanel> <Admin/> </TabPanel>) : <></> }
                     </TabPanels>
                 </Tabs>
             </>
         )
     }
+
+    useEffect(() => {
+        (async function () {
+            if( state.contract )
+            {
+                let voters = await state.contract.getPastEvents('VoterRegistered', {
+                    fromBlock: 0,
+                    toBlock: 'latest'
+                });
+                voters.forEach(event => {
+                    if( event.returnValues.voterAddress === state.accounts[0] )
+                        setIsVoter( true );
+                });
+            }
+        })();
+    },[state.contract])
 
     return (
         <div>
