@@ -15,7 +15,6 @@ import {
 } from "@chakra-ui/react";
 import {workflowStatusArray} from "../components/Utils";
 import ListVoted from "../components/ListVoted";
-import ListProposals from "../components/ListProposals";
 
 
 function Admin() {
@@ -23,6 +22,7 @@ function Admin() {
     const [newVoter, setNewVoter] = useState("");
     const [votersEvents, setVotersEvents] = useState();
     const [workflowStatusEvents, setWorkflowStatusEvents] = useState();
+    const [proposals, setProposals] = useState();
 
     const {state} = useEth();
 
@@ -219,6 +219,29 @@ function Admin() {
         }
     }
 
+    const ListProposals = () => {
+        return(
+            <Card w={300}>
+                <CardHeader>
+                    <Heading>Proposals</Heading>
+                </CardHeader>
+                <Divider/>
+                <CardBody>
+                    <ul>
+                        { proposals?.length > 0 ?
+                            proposals.map( item => {
+                                let itemText = `Proposal Id '${item.proposalId}' registered`
+                                return(<li key={item.proposalId}>{itemText}</li>)
+                            })
+                            :
+                            <li>No proposal yet</li>
+                        }
+                    </ul>
+                </CardBody>
+            </Card>
+        )
+    }
+
     useEffect(() => {(
         async function () {
             if (state.contract) {
@@ -241,6 +264,16 @@ function Admin() {
                     workflowStatusChange.push(event.returnValues);
                 });
                 setWorkflowStatusEvents(workflowStatusChange)
+
+                let oldProposalsEvents = await state.contract.getPastEvents('ProposalRegistered', {
+                    fromBlock: 0,
+                    toBlock: 'latest'
+                });
+                let proposalEvents=[];
+                oldProposalsEvents.forEach(event => {
+                    proposalEvents.push({'proposalId': event.returnValues.proposalId});
+                });
+                setProposals(proposalEvents);
             }
         })();
     }, [state.contract])
