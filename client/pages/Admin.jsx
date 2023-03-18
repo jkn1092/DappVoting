@@ -34,6 +34,10 @@ function Admin() {
             }
             try {
                 await state.contract.methods.addVoter(newVoter).send({from: state.accounts[0]});
+                let voters = [];
+                voters.push( votersEvents );
+                voters.push( newVoter );
+                setVotersEvents( voters );
                 setNewVoter("");
                 alert("Voter added");
             } catch (err) {
