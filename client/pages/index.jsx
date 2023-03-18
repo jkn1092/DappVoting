@@ -75,12 +75,12 @@ export default function Home() {
                 }
                 <Tabs defaultIndex={1}>
                     <TabList>
-                        { isVoter ? (<Tab>Voter</Tab>) : <></> }
                         { state.owner === state.accounts[0] ? (<Tab> Admin </Tab>) : <></> }
+                        { isVoter ? (<Tab>Voter</Tab>) : <></> }
                     </TabList>
                     <TabPanels>
-                        { isVoter ? ( <TabPanel> <Voter/> </TabPanel> ) : <></> }
                         { state.owner === state.accounts[0] ? (<TabPanel> <Admin/> </TabPanel>) : <></> }
+                        { isVoter ? ( <TabPanel> <Voter/> </TabPanel> ) : <></> }
                     </TabPanels>
                 </Tabs>
             </>
@@ -101,7 +101,7 @@ export default function Home() {
                 });
             }
         })();
-    },[state.contract])
+    },[state.accounts])
 
     return (
         <div>

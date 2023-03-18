@@ -23,12 +23,6 @@ import useEth from "../contexts/EthContext/useEth";
 import {useEffect, useState} from "react";
 
 
-interface Proposal {
-    code: number;
-    value: string;
-}
-import React from "react";
-
 function Voter() {
 
     const toast = useToast();
@@ -91,7 +85,7 @@ function Voter() {
                         fromBlock: 0,
                         toBlock: 'latest'
                     });
-                    let propositions: Proposal[] = [];
+                    let propositions = [];
                     for (const proposition of oldPropositions) {
                         const value = await state.contract.methods.getOneProposal(proposition.returnValues.proposalId).call({from: state.accounts[0]});
                         propositions.push({code: proposition.returnValues.proposalId, value: value.description});
@@ -164,7 +158,8 @@ function Voter() {
                         </CardBody>
                     </Card>
                 </GridItem>
-                <GridItem w='100%' h='15' hidden={state.workFlowStatus !== '3' ||  proposalsEvents.length === 0 || voteEvents.find(v => v.voter == state.accounts[0])}>
+                <GridItem w='100%' h='15'
+                          hidden={state.workFlowStatus !== '3' || proposalsEvents.length === 0 || voteEvents.find(v => v.voter == state.accounts[0])}>
                     <Card w={350}>
                         <CardHeader>
                             <Heading>Vote session</Heading>
@@ -190,8 +185,8 @@ function Voter() {
                             <Heading>Your vote</Heading>
                         </CardHeader>
                         <CardBody>
-                            {voteEvents.find(v => v.voter == state.accounts[0])?.proposalId }
-                            : { proposalsEvents.find(v => v.code == voteEvents.find(v => v.voter == state.accounts[0])?.proposalId)?.value}
+                            {voteEvents.find(v => v.voter == state.accounts[0])?.proposalId}
+                            : {proposalsEvents.find(v => v.code == voteEvents.find(v => v.voter == state.accounts[0])?.proposalId)?.value}
                         </CardBody>
                     </Card>
                 </GridItem>
