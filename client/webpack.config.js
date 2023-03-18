@@ -6,7 +6,7 @@ const extensions = [".js", ".jsx"];
 
 module.exports = {
   mode: process.env.NODE_ENV === "production" ? "production" : "development",
-  entry: "./src/index.jsx",
+  entry: "./pages/_app.jsx",
   output: {
     path: path.resolve(__dirname, "build"),
   },
@@ -39,7 +39,7 @@ module.exports = {
   plugins: [
     new EslintWebpackPlugin({ extensions }),
     new HtmlWebpackPlugin({
-      template: "./public/index.html",
+      template: "./public/_app.html",
       favicon: "./public/favicon.ico",
     }),
   ],

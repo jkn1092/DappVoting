@@ -41,7 +41,7 @@ contract("Voting", function (accounts) {
 
     })
 
-    context("Add Proposal Phase", function() {
+    context("Add Proposal.ts Phase", function() {
         beforeEach(async function () {
             Voting = await vi.new({from: owner});
             await Voting.addVoter(voter1, {from: owner})
@@ -67,7 +67,7 @@ contract("Voting", function (accounts) {
                 "Vous ne pouvez pas ne rien proposer")
         })
 
-        it("Proposal pass, test on proposal description and getter getOneProposal", async function () {
+        it("Proposal.ts pass, test on proposal description and getter getOneProposal", async function () {
             await Voting.startProposalsRegistering({from: owner})
             await Voting.addProposal("proposalVoter1", {from: voter1})
             const ID = 1;
@@ -75,21 +75,21 @@ contract("Voting", function (accounts) {
             expect(voter1ProposalID.description).to.be.equal("proposalVoter1");
         })
 
-        it("Proposal pass, test on proposalRegistered event", async function () {
+        it("Proposal.ts pass, test on proposalRegistered event", async function () {
             await Voting.startProposalsRegistering({from: owner})
             let receipt  = await Voting.addProposal("proposalVoter1", {from: voter1})
             const ID = 1;
             expectEvent(receipt, "ProposalRegistered", {proposalId: new BN(ID)});
         })
 
-        it("1 Proposal pass, test on revert getter getOneProposal ID 1", async function () {
+        it("1 Proposal.ts pass, test on revert getter getOneProposal ID 1", async function () {
             await Voting.startProposalsRegistering({from: owner})
             await Voting.addProposal("proposalVoter1", {from: voter1})
             const ID = 2;
             await expectRevert.unspecified( Voting.getOneProposal(ID , {from: voter1}));
         })
 
-        it("Multiple Proposal pass : concat", async function () {
+        it("Multiple Proposal.ts pass : concat", async function () {
             await Voting.startProposalsRegistering({from: owner})
             await Voting.addProposal("proposalVoter1", {from: voter1})
             await Voting.addProposal("proposalVoter2", {from: voter2})
@@ -130,7 +130,7 @@ contract("Voting", function (accounts) {
             await expectRevert(Voting.setVote(0, {from: owner}),
                 "You're not a voter")
             await expectRevert(Voting.setVote(5, {from: voter1}),
-                "Proposal not found")
+                "Proposal.ts not found")
             await Voting.setVote(1, {from: voter1});
             await expectRevert(Voting.setVote(2, {from: voter1}),
                 "You have already voted")
