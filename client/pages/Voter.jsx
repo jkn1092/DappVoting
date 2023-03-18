@@ -46,7 +46,7 @@ function Voter() {
         } catch (err) {
             toast({
                 title: 'Error',
-                description: "An error was occurred" + err,
+                description: "An error was occurred",
                 status: 'error',
                 duration: 5000,
                 isClosable: true,
@@ -56,7 +56,6 @@ function Voter() {
 
     const vote = async () => {
         try {
-            console.log(state);
             await state.contract.methods.setVote(voteValue).send({from: state.accounts[0]});
             toast({
                 title: 'Congratulations',
@@ -66,10 +65,9 @@ function Voter() {
                 isClosable: true,
             })
         } catch (err) {
-            console.log(err);
             toast({
                 title: 'Error',
-                description: "An error was occurred" + err,
+                description: "An error was occurred",
                 status: 'error',
                 duration: 5000,
                 isClosable: true,
