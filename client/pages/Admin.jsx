@@ -1,5 +1,5 @@
 import useEth from "../contexts/EthContext/useEth";
-import {useEffect, useState} from "react";
+import {useEffect, useReducer, useState} from "react";
 import {Box, Container, Divider, Wrap, WrapItem} from '@chakra-ui/react'
 import {
     Button,
@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import {workflowStatusArray} from "../components/Utils";
 import ListVoted from "../components/ListVoted";
-
+import {actions, reducer} from "../contexts/EthContext";
 
 function Admin() {
     const toast = useToast()
@@ -23,6 +23,8 @@ function Admin() {
     const [proposals, setProposals] = useState();
 
     const {state} = useEth();
+
+    const [, dispatch] = useReducer(reducer, state);
 
     const AddVoterUI = () => {
         const addVoter = async () => {
@@ -127,6 +129,10 @@ function Admin() {
                         duration: 9000,
                         isClosable: true,
                     })
+                    dispatch({
+                        type: actions.update,
+                        data: { workFlowStatus : 1 }
+                    })
                 } catch (err) {
                     toast({
                         title: 'Error',
@@ -146,6 +152,10 @@ function Admin() {
                         status: 'success',
                         duration: 9000,
                         isClosable: true,
+                    })
+                    dispatch({
+                        type: actions.update,
+                        data: { workFlowStatus : 2 }
                     })
                 } catch (err) {
                     toast({
@@ -167,6 +177,10 @@ function Admin() {
                         duration: 9000,
                         isClosable: true,
                     })
+                    dispatch({
+                        type: actions.update,
+                        data: { workFlowStatus : 3 }
+                    })
                 } catch (err) {
                     toast({
                         title: 'Error',
@@ -187,6 +201,10 @@ function Admin() {
                         duration: 9000,
                         isClosable: true,
                     })
+                    dispatch({
+                        type: actions.update,
+                        data: { workFlowStatus : 4 }
+                    })
                 } catch (err) {
                     toast({
                         title: 'Error',
@@ -206,6 +224,10 @@ function Admin() {
                         status: 'success',
                         duration: 9000,
                         isClosable: true,
+                    })
+                    dispatch({
+                        type: actions.update,
+                        data: { workFlowStatus : 5 }
                     })
                 } catch (err) {
                     toast({

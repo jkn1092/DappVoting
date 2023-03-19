@@ -39,31 +39,25 @@ export default function Home() {
         }
     }
 
-    const WorkflowStatusDisplay = () => {
-        return(
-            <Breadcrumb spacing='8px' separator={'>'}>
-                {
-                    workflowStatusArray.map( item => {
-                        return(
-                            <BreadcrumbItem key={item}>
-                                {
-                                    workflowStatusArray[state.workFlowStatus] === item ?
-                                        <BreadcrumbLink color={"blue.400"}>{item}</BreadcrumbLink>
-                                        :
-                                        <BreadcrumbLink>{item}</BreadcrumbLink>
-                                }
-                            </BreadcrumbItem>
-                        );
-                    })
-                }
-            </Breadcrumb>
-        );
-    }
-
     const ConnectedUserUI = () => {
         return (
             <>
-                <WorkflowStatusDisplay/>
+                <Breadcrumb spacing='8px' separator={'>'}>
+                    {
+                        workflowStatusArray.map( item => {
+                            return(
+                                <BreadcrumbItem key={item}>
+                                    {
+                                        workflowStatusArray[state.workFlowStatus] === item ?
+                                            <BreadcrumbLink color={"blue.400"}>{item}</BreadcrumbLink>
+                                            :
+                                            <BreadcrumbLink>{item}</BreadcrumbLink>
+                                    }
+                                </BreadcrumbItem>
+                            );
+                        })
+                    }
+                </Breadcrumb>
                 { state.workFlowStatus === '5' ?
                     (
                         <Box bg='blue.400' w='100%' p={4} color='white'>
