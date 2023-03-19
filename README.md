@@ -10,6 +10,7 @@ Daap de vote basé sur un smart contract de vote et proposals.
 ## Sources
 - Vidéo : https://www.loom.com/share/3a9f121d00f64884891638df986e606d
 - Dapp déployé : https://dapp-voting-alyra-tau.vercel.app/
+- Youtube : https://youtu.be/4ZOQvXPz05M
 
 ## Installation
 
