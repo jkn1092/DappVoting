@@ -1,16 +1,20 @@
 import useEth from "../contexts/EthContext/useEth";
 import {useEffect, useReducer, useState} from "react";
-import {Box, Container, Divider, Wrap, WrapItem} from '@chakra-ui/react'
 import {
+    Box,
     Button,
     Card,
     CardBody,
     CardFooter,
     CardHeader,
+    Divider,
     Heading,
     Input,
-    useToast
-} from "@chakra-ui/react";
+    useToast,
+    SimpleGrid,
+    GridItem,
+    Grid
+} from '@chakra-ui/react'
 import {workflowStatusArray} from "../components/Utils";
 import ListVoted from "../components/ListVoted";
 import {actions, reducer} from "../contexts/EthContext";
@@ -315,6 +319,16 @@ function Admin() {
             })();
     }, [state.contract])
 
+    function getButtonName() {
+        switch (state.workFlowStatus){
+            case '0' : return 'Start Proposals registration'
+            case '1' : return 'End Proposals registration'
+            case '2' : return 'Start Voting session'
+            case '3' : return 'End Voting session'
+            case '4' : return 'Tally votes'
+        }
+    }
+
     if (!state.web3) {
         return
     } else {
@@ -322,28 +336,32 @@ function Admin() {
             <div>
 
                 <Box justifyItems={"center"}> <Button hidden={state.workFlowStatus === '5'}
-                                                      onClick={() => nextWorkflowStatus()}>Next status</Button>
+                                                      onClick={() => nextWorkflowStatus()}>{getButtonName()}</Button>
                 </Box>
                 <br/>
                 <br/>
-                <SimpleGrid columns={2} gap={6}>
-                    <GridItem w='100%' h='200' hidden={state.workFlowStatus !== '0'}>
-                        <AddVoterUI/>
-                    </GridItem>
-                    <GridItem w='100%' h='200' hidden={state.votersEvents}>
-                        <ListVoters/>
-                    </GridItem>
-                    <GridItem w='100%' h='200' hidden={state.workFlowStatus === '0'}>
-                        <ListProposals/>
-                    </GridItem>
-                    <GridItem w='100%' h='200' hidden={state.workFlowStatus <= '2'}>
-                        <ListVoted/>
-                    </GridItem>
-                    <GridItem w='100%' h='200'>
+                <Grid templateRows='repeat(3, 1fr)'
+                      templateColumns='repeat(2, 1fr)'
+                      gap={6}
+                     >
+                    <GridItem w='100%' rowSpan={3} colSpan={1}>
                         <ListWorkflowStatusChange/>
                     </GridItem>
+                    <GridItem w='100%' h='100%' hidden={state.workFlowStatus !== '0'}>
+                        <AddVoterUI/>
+                    </GridItem>
+                    <GridItem w='100%' h='100%' hidden={state.votersEvents}>
+                        <ListVoters/>
+                    </GridItem>
+                    <GridItem w='100%' h='100%' hidden={state.workFlowStatus === '0'}>
+                        <ListProposals/>
+                    </GridItem>
+                    <GridItem w='100%' h='100%' hidden={state.workFlowStatus <= '2'}>
+                        <ListVoted/>
+                    </GridItem>
 
-                </SimpleGrid>
+
+                </Grid>
             </div>
         )
             ;
