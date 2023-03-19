@@ -1,6 +1,6 @@
 import useEth from "../contexts/EthContext/useEth";
 import {useEffect, useState} from "react";
-import {Box, Container, Divider, Flex, Grid, GridItem, Text, Wrap, WrapItem} from '@chakra-ui/react'
+import {Box, Container, Divider, Wrap, WrapItem} from '@chakra-ui/react'
 import {
     Button,
     Card,
@@ -9,8 +9,6 @@ import {
     CardHeader,
     Heading,
     Input,
-    SimpleGrid, Spacer,
-    Stack,
     useToast
 } from "@chakra-ui/react";
 import {workflowStatusArray} from "../components/Utils";

@@ -76,11 +76,11 @@ export default function Home() {
                 <Tabs defaultIndex={1}>
                     <TabList>
                         { state.owner === state.accounts[0] ? (<Tab> Admin </Tab>) : <></> }
-                        { voters.find(v => v == state.accounts[0]) ? (<Tab>Voter</Tab>) : <></> }
+                        { voters?.find(v => v == state.accounts[0]) ? (<Tab>Voter</Tab>) : <></> }
                     </TabList>
                     <TabPanels>
                         { state.owner === state.accounts[0] ? (<TabPanel> <Admin/> </TabPanel>) : <></> }
-                        { voters.find(v => v == state.accounts[0]) ? ( <TabPanel> <Voter/> </TabPanel> ) : <></> }
+                        { voters?.find(v => v == state.accounts[0]) ? ( <TabPanel> <Voter/> </TabPanel> ) : <></> }
                     </TabPanels>
                 </Tabs>
             </>
