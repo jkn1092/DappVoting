@@ -39,18 +39,6 @@ export default function Home() {
         }
     }
 
-    const isVoter = () => {
-        if( state.contract && voters )
-        {
-            voters.map( item => {
-               if( item === state.accounts[0] ){
-                   return true;
-               }
-            });
-        }
-        return false;
-    }
-
     const WorkflowStatusDisplay = () => {
         return(
             <Breadcrumb spacing='8px' separator={'>'}>
@@ -88,11 +76,11 @@ export default function Home() {
                 <Tabs defaultIndex={1}>
                     <TabList>
                         { state.owner === state.accounts[0] ? (<Tab> Admin </Tab>) : <></> }
-                        { isVoter ? (<Tab>Voter</Tab>) : <></> }
+                        { voters.find(v => v == state.accounts[0]) ? (<Tab>Voter</Tab>) : <></> }
                     </TabList>
                     <TabPanels>
                         { state.owner === state.accounts[0] ? (<TabPanel> <Admin/> </TabPanel>) : <></> }
-                        { isVoter ? ( <TabPanel> <Voter/> </TabPanel> ) : <></> }
+                        { voters.find(v => v == state.accounts[0]) ? ( <TabPanel> <Voter/> </TabPanel> ) : <></> }
                     </TabPanels>
                 </Tabs>
             </>
