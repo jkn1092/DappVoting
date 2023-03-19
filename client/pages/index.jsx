@@ -29,7 +29,7 @@ const theme = extendTheme({
 
 export default function Home() {
     const {state} = useEth();
-    const [isVoter, setIsVoter] = useState( false);
+    const [voters, setVoters] = useState();
 
     const connectWallet = async () => {
         try {
@@ -37,6 +37,18 @@ export default function Home() {
         } catch (err) {
             console.log("error occured while connecting to MetaMask")
         }
+    }
+
+    const isVoter = () => {
+        if( state.contract && voters )
+        {
+            voters.map( item => {
+               if( item === state.accounts[0] ){
+                   return true;
+               }
+            });
+        }
+        return false;
     }
 
     const WorkflowStatusDisplay = () => {
@@ -91,14 +103,16 @@ export default function Home() {
         (async function () {
             if( state.contract )
             {
-                let voters = await state.contract.getPastEvents('VoterRegistered', {
+                let events = await state.contract.getPastEvents('VoterRegistered', {
                     fromBlock: 0,
                     toBlock: 'latest'
                 });
-                voters.forEach(event => {
-                    if( event.returnValues.voterAddress === state.accounts[0] )
-                        setIsVoter( true );
+                let votersArray = [];
+                events.forEach(event => {
+                    votersArray.push(event.returnValues.voterAddress);
                 });
+                setVoters(votersArray);
+
             }
         })();
     },[state.accounts])
