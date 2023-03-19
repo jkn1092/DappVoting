@@ -1,6 +1,15 @@
-# React Truffle Box
+# Dapp Voting Alyra
 
-This box comes with everything you need to start using Truffle to write, compile, test, and deploy smart contracts, and interact with them from a React app.
+Daap de vote basé sur un smart contract de vote et proposals.
+
+## Contributeurs
+
+- Jérémy Narrinasamy
+- Hela Cherif
+
+## Sources
+- Vidéo : https://www.loom.com/share/3a9f121d00f64884891638df986e606d
+- Dapp déployé : https://dapp-voting-alyra-tau.vercel.app/
 
 ## Installation
 
@@ -19,14 +28,24 @@ $ truffle unbox react
 $ npx truffle unbox react
 ```
 
+```sh
+# Start ganache
+$ ganache
+```
+
+```sh
+# Migrate contract to ganache
+$ truffle migrate --reset
+```
+
 Start the react dev server.
 
 ```sh
 $ cd client
-$ npm start
+$ npx next dev
 ```
 
-From there, follow the instructions on the hosted React app. It will walk you through using Truffle and Ganache to deploy the `SimpleStorage` contract, making calls to it, and sending transactions to change the contract's state.
+From there, follow the instructions on the hosted React app. It will walk you through using Truffle and Ganache to deploy the `Voting` contract, making calls to it, and sending transactions to change the contract's state.
 
 ## FAQ
 
