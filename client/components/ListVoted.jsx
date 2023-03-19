@@ -43,7 +43,7 @@ function ListVoted() {
     return(
         <Card w={500}>
             <CardHeader>
-                <Heading>List Voted</Heading>
+                <Heading color={"gray.600"} >Voted List</Heading>
             </CardHeader>
             <Divider/>
             <CardBody>

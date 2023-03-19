@@ -11,7 +11,8 @@ const initialState = {
   contract: null,
   owner: null,
   workFlowStatus: null,
-  winningProposalId: null
+  winningProposalId: null,
+  address: null,
 };
 
 const reducer = (state, action) => {

@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
     Box,
     Breadcrumb,
     BreadcrumbItem,
     BreadcrumbLink,
     Button,
-    extendTheme,
-    Stack, Tab,
-    TabList, TabPanel,
+    Tab,
+    TabList,
+    TabPanel,
     TabPanels,
     Tabs
 } from '@chakra-ui/react'
@@ -17,15 +17,6 @@ import Admin from "./Admin";
 import Voter from "./Voter";
 import {workflowStatusArray} from "../components/Utils";
 
-const theme = extendTheme({
-    styles: {
-        global: (props) => ({
-            body: {
-                bg: 'gray.300'
-            }
-        })
-    }
-})
 
 export default function Home() {
     const {state} = useEth();
@@ -39,25 +30,31 @@ export default function Home() {
         }
     }
 
+    const WorkflowStatusDisplay = () => {
+        return(
+            <Breadcrumb spacing='8px' separator={'>'}>
+                {
+                    workflowStatusArray.map( item => {
+                        return(
+                            <BreadcrumbItem key={item}>
+                                {
+                                    workflowStatusArray[state.workFlowStatus] === item ?
+                                        <BreadcrumbLink color={"blue.400"}>{item}</BreadcrumbLink>
+                                        :
+                                        <BreadcrumbLink>{item}</BreadcrumbLink>
+                                }
+                            </BreadcrumbItem>
+                        );
+                    })
+                }
+            </Breadcrumb>
+        );
+    }
+
     const ConnectedUserUI = () => {
         return (
             <>
-                <Breadcrumb spacing='8px' separator={'>'}>
-                    {
-                        workflowStatusArray.map( item => {
-                            return(
-                                <BreadcrumbItem key={item}>
-                                    {
-                                        workflowStatusArray[state.workFlowStatus] === item ?
-                                            <BreadcrumbLink color={"blue.400"}>{item}</BreadcrumbLink>
-                                            :
-                                            <BreadcrumbLink>{item}</BreadcrumbLink>
-                                    }
-                                </BreadcrumbItem>
-                            );
-                        })
-                    }
-                </Breadcrumb>
+                <WorkflowStatusDisplay/>
                 { state.workFlowStatus === '5' ?
                     (
                         <Box bg='blue.400' w='100%' p={4} color='white'>
@@ -83,8 +80,7 @@ export default function Home() {
 
     useEffect(() => {
         (async function () {
-            if( state.contract )
-            {
+            if (state.contract) {
                 let events = await state.contract.getPastEvents('VoterRegistered', {
                     fromBlock: 0,
                     toBlock: 'latest'
@@ -100,14 +96,14 @@ export default function Home() {
     },[state.accounts])
 
     return (
-        <div>
             <Layout>
-                    {state.accounts ?
-                        <ConnectedUserUI/>
-                        :
+                {state.accounts ?
+                    <ConnectedUserUI/>
+                    :
+                    <Box alignSelf={'center'}>
                         <Button colorScheme='blue' size='lg' onClick={() => connectWallet()}>Connect Wallet</Button>
-                    }
+                    </Box>
+                }
             </Layout>
-        </div>
     )
 }

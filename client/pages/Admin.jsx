@@ -35,26 +35,38 @@ function Admin() {
             try {
                 await state.contract.methods.addVoter(newVoter).send({from: state.accounts[0]});
                 let voters = [];
-                voters.push( votersEvents );
-                voters.push( newVoter );
-                setVotersEvents( voters );
+                voters.push(votersEvents);
+                voters.push(newVoter);
+                setVotersEvents(voters);
                 setNewVoter("");
-                alert("Voter added");
+                toast({
+                    title: 'Congratulations',
+                    description: "Voter added",
+                    status: 'success',
+                    duration: 5000,
+                    isClosable: true,
+                })
             } catch (err) {
-                alert("Invalid address");
+                toast({
+                    title: 'Error',
+                    description: "An error was occurred" + err,
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                })
             }
         }
 
         return (
-            <Card w={300}>
+            <Card w={500}>
                 <CardHeader>
-                    <Heading>Registration</Heading>
+                    <Heading color={"gray.600"}>Registration</Heading>
                 </CardHeader>
                 <CardBody>
                     <Input
                         value={newVoter}
                         focusBorderColor='pink.400'
-                        placeholder='please add voter name here..'
+                        placeholder='Please add voter address here..'
                         onChange={(e) => setNewVoter(e.target.value)}
                         autoFocus
                     />
@@ -68,15 +80,15 @@ function Admin() {
 
     const ListVoters = () => {
         return (
-            <Card w={450}>
+            <Card w={500}>
                 <CardHeader>
-                    <Heading>Voter list</Heading>
+                    <Heading color={"gray.600"}>Voter List</Heading>
                 </CardHeader>
                 <Divider/>
                 <CardBody>
-                    <ul>{votersEvents ? votersEvents.map(item => {
+                    <ul>{votersEvents?.length ? votersEvents.map(item => {
                         return (<li key={item}>{item}</li>)
-                    }) : <li>No Voter is registred</li>
+                    }) : <>No Voter is registred</>
                     }</ul>
                 </CardBody>
             </Card>)
@@ -87,12 +99,12 @@ function Admin() {
             if (workflowStatusEvents != null) {
                 return (
                     <Card w={500}>
-                        <CardHeader>
-                            <Heading>Workflow history</Heading>
+                        <CardHeader color={"gray.600"}>
+                            <Heading>Workflow status history</Heading>
                         </CardHeader>
                         <Divider/>
                         <CardBody>
-                            { workflowStatusEvents.length > 0 ?
+                            {workflowStatusEvents.length > 0 ?
                                 (
                                     <ul>{workflowStatusEvents.map(item => {
                                         return (
@@ -244,18 +256,18 @@ function Admin() {
     }
 
     const ListProposals = () => {
-        return(
-            <Card w={300}>
+        return (
+            <Card w={500}>
                 <CardHeader>
-                    <Heading>Proposals</Heading>
+                    <Heading color={"gray.600"}>Proposals</Heading>
                 </CardHeader>
                 <Divider/>
                 <CardBody>
                     <ul>
-                        { proposals?.length > 0 ?
-                            proposals.map( item => {
+                        {proposals?.length > 0 ?
+                            proposals.map(item => {
                                 let itemText = `Proposal Id '${item.proposalId}' registered`
-                                return(<li key={item.proposalId}>{itemText}</li>)
+                                return (<li key={item.proposalId}>{itemText}</li>)
                             })
                             :
                             <li>No proposal yet</li>
@@ -266,89 +278,75 @@ function Admin() {
         )
     }
 
-    useEffect(() => {(
-        async function () {
-            if (state.contract) {
-                let oldVoters = await state.contract.getPastEvents('VoterRegistered', {
-                    fromBlock: 0,
-                    toBlock: 'latest'
-                });
-                let voters = [];
-                oldVoters.forEach(event => {
-                    voters.push(event.returnValues.voterAddress);
-                });
-                setVotersEvents(voters)
+    useEffect(() => {
+        (
+            async function () {
+                if (state.contract) {
+                    let oldVoters = await state.contract.getPastEvents('VoterRegistered', {
+                        fromBlock: 0,
+                        toBlock: 'latest'
+                    });
+                    let voters = [];
+                    oldVoters.forEach(event => {
+                        voters.push(event.returnValues.voterAddress);
+                    });
+                    setVotersEvents(voters)
 
-                let oldWorkflowStatusChange = await state.contract.getPastEvents('WorkflowStatusChange', {
-                    fromBlock: 0,
-                    toBlock: 'latest'
-                });
-                let workflowStatusChange = [];
-                oldWorkflowStatusChange.forEach(event => {
-                    workflowStatusChange.push(event.returnValues);
-                });
-                setWorkflowStatusEvents(workflowStatusChange)
+                    let oldWorkflowStatusChange = await state.contract.getPastEvents('WorkflowStatusChange', {
+                        fromBlock: 0,
+                        toBlock: 'latest'
+                    });
+                    let workflowStatusChange = [];
+                    oldWorkflowStatusChange.forEach(event => {
+                        workflowStatusChange.push(event.returnValues);
+                    });
+                    setWorkflowStatusEvents(workflowStatusChange)
 
-                let oldProposalsEvents = await state.contract.getPastEvents('ProposalRegistered', {
-                    fromBlock: 0,
-                    toBlock: 'latest'
-                });
-                let proposalEvents=[];
-                oldProposalsEvents.forEach(event => {
-                    proposalEvents.push({'proposalId': event.returnValues.proposalId});
-                });
-                setProposals(proposalEvents);
-            }
-        })();
+                    let oldProposalsEvents = await state.contract.getPastEvents('ProposalRegistered', {
+                        fromBlock: 0,
+                        toBlock: 'latest'
+                    });
+                    let proposalEvents = [];
+                    oldProposalsEvents.forEach(event => {
+                        proposalEvents.push({'proposalId': event.returnValues.proposalId});
+                    });
+                    setProposals(proposalEvents);
+                }
+            })();
     }, [state.contract])
 
     if (!state.web3) {
         return
     } else {
         return (
-            <Box>
-                { state.workFlowStatus != '5' ?
-                    <Button onClick={() => nextWorkflowStatus()}>Next status</Button>
-                    :
-                    <></>
-                }
-                    <Wrap>
-                        <WrapItem>
-                            <ListVoters/>
-                        </WrapItem>
-                        { state.workFlowStatus === '0' ?
-                            (
-                                <WrapItem>
-                                    <AddVoterUI/>
-                                </WrapItem>
-                            )
-                            :
-                            <></>
-                        }
-                        { state.workFlowStatus > '0' ?
-                            (
-                                <WrapItem>
-                                    <ListProposals/>
-                                </WrapItem>
-                            )
-                            :
-                            <></>
-                        }
-                        { state.workFlowStatus > '2' ?
-                            (
-                                <WrapItem>
-                                    <ListVoted/>
-                                </WrapItem>
-                            )
-                            :
-                            <></>
-                        }
-                        <WrapItem>
-                            <ListWorkflowStatusChange/>
-                        </WrapItem>
-                    </Wrap>
-            </Box>
-        );
+            <div>
+
+                <Box justifyItems={"center"}> <Button hidden={state.workFlowStatus === '5'}
+                                                      onClick={() => nextWorkflowStatus()}>Next status</Button>
+                </Box>
+                <br/>
+                <br/>
+                <SimpleGrid columns={2} gap={6}>
+                    <GridItem w='100%' h='200' hidden={state.workFlowStatus !== '0'}>
+                        <AddVoterUI/>
+                    </GridItem>
+                    <GridItem w='100%' h='200' hidden={state.votersEvents}>
+                        <ListVoters/>
+                    </GridItem>
+                    <GridItem w='100%' h='200' hidden={state.workFlowStatus === '0'}>
+                        <ListProposals/>
+                    </GridItem>
+                    <GridItem w='100%' h='200' hidden={state.workFlowStatus <= '2'}>
+                        <ListVoted/>
+                    </GridItem>
+                    <GridItem w='100%' h='200'>
+                        <ListWorkflowStatusChange/>
+                    </GridItem>
+
+                </SimpleGrid>
+            </div>
+        )
+            ;
     }
 }
 

@@ -7,17 +7,17 @@ const theme = extendTheme({
     styles: {
         global: (props) => ({
             body: {
-                bg: 'gray.300'
+                bg: 'gray.100'
             }
         })
     }
 })
 
-export default function App({ Component, pageProps }) {
+export default function App({Component, pageProps}) {
     return (
         <EthProvider>
             <ChakraProvider theme={theme}>
-                <Component {...pageProps} />
+                <Component {...pageProps}/>
             </ChakraProvider>
         </EthProvider>
     )

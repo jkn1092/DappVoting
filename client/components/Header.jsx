@@ -1,34 +1,20 @@
-import {
-    Flex,
-    Image,
-    Text,
-    Heading,
-    Spacer,
-    MenuItem,
-    MenuList,
-    Button,
-    Stack,
-    useColorModeValue, Box
-} from '@chakra-ui/react';
-import Head from "next/head";
+import {Box, Button, Flex, Heading, Image, Stack} from '@chakra-ui/react';
 import React from "react";
-import Admin from "../pages/Admin";
-import Voter from "../pages/Voter";
 import useEth from "../contexts/EthContext/useEth";
 
 const Header = () => {
     const {state} = useEth();
 
     const UserStatusUI = () => {
-        if( state.accounts )
-        {
-            return(
+        if (state.accounts) {
+            return (
                 <Stack
-                    flex={{ base: 1, md: 0 }}
+                    flex={{base: 1, md: 0}}
                     justify={'flex-end'}
                     direction={'row'}
                     spacing={6}>
                     <Button
+                        alignSelf={"right"}
                         px={4}
                         fontSize={'sm'}
                         rounded={'full'}
@@ -43,7 +29,7 @@ const Header = () => {
                         _focus={{
                             bg: 'blue.500',
                         }}>
-                        {state.accounts[0].slice(0,5)}...{state.accounts[0].slice(state.accounts[0].length - 5)}
+                        {state.accounts[0].slice(0, 5)}...{state.accounts[0].slice(state.accounts[0].length - 5)}
                     </Button>
                 </Stack>
             );
@@ -51,28 +37,23 @@ const Header = () => {
     }
 
     return (
-        <Box>
-            <Flex
-                minH={'60px'}
-                py={{ base: 2 }}
-                px={{ base: 4 }}
-                align={'center'}
+        <div>
+            <Flex justifyContent={'space-between'} minH={'60px'}
+                  py={{base: 2}}
+                  px={{base: 4}}
+                  align={'center'}
             >
-                <Flex
-                    flex={{ base: 1 }}>
-                    <Image
-                        borderRadius='full'
-                        boxSize='100px'
-                        src="vote.png"
-                        alt='vote'
-                    />
-                </Flex>
-                <Flex flex={{ base: 1 }}>
-                    <Heading as='h1' size='xl'>Online voting</Heading>
-                </Flex>
+                <Image
+                    borderRadius='full'
+                    boxSize='100px'
+                    src="vote.png"
+                    alt='vote'
+                />
+                <Heading as='h1' size='xl'>Online voting</Heading>
                 <UserStatusUI/>
             </Flex>
-        </Box>
+        </div>
+
     )
 }
 
