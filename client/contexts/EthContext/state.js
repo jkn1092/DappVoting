@@ -1,5 +1,6 @@
 const actions = {
-  init: "INIT"
+  init: "INIT",
+  update: "UPDATE"
 };
 
 const initialState = {
@@ -17,6 +18,8 @@ const reducer = (state, action) => {
   const { type, data } = action;
   switch (type) {
     case actions.init:
+      return { ...state, ...data };
+    case actions.update:
       return { ...state, ...data };
     default:
       throw new Error("Undefined reducer action type");
